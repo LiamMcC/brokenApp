@@ -1,0 +1,34 @@
+
+  <% include ../partials/header %>
+  
+  <div class="row">
+<div class="container">
+
+	<div class="item">
+		<h1><span class="fa fa-anchor"></span> Profile Page</h1>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+	</div>
+
+	<div class="row">
+
+		<!-- LOCAL INFORMATION -->
+		<div class="item">
+			<div class="well">
+				<h3><span class="fa fa-user"></span> Local</h3>
+
+					<p class="itemp">
+						<strong>id</strong>: <%= user.Id %><br>
+						<strong>username</strong>: <%= user.username %><br>
+						<strong>password</strong>: <%= user.password %>
+					</p>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+  </div>
+
+
+<% include ../partials/footer %>

@@ -1,0 +1,30 @@
+  <% include ../partials/header %>
+
+<div class="row">
+  <h1>Welcome to the products page  <br>
+  <div class="grid-container">
+         <% res1.forEach(function(product) { %>
+                
+                <div class="item">
+                    <%= product.Id %><br>
+                    <%= product.Name %><br>
+                    <%= product.Price %><br>
+                    <%= product.Image %>
+                    <a href="/edit/<%= product.Id %>" class="button">Edit Product</a>
+                    </div>
+              
+         <% }); %>
+    </div>
+  </h1>
+</div>
+
+
+<label for="sport">Sport:</label>
+<input name="sport" type="text" placeholder="Enter a Sport" />
+
+
+
+
+
+
+<% include ../partials/footer %>
