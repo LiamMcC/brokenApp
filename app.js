@@ -4,12 +4,15 @@ var mysql = require('mysql'); // allow access to sql
 var flash    = require('connect-flash');
 // Passport
 var passport = require('passport');
+var myObj = { "name":"John"};    // set a json object to represent the cart I called it myObject
+
 
 var LocalStrategy = require('passport-local').Strategy;
-
+var localStorage = require('node-localstorage')
 var session  = require('express-session');
 var cookieParser = require('cookie-parser');
 
+// Create a table called users with autoincrement id username and password fields as a mnimum
 
 
 var bcrypt = require('bcrypt-nodejs');
@@ -65,10 +68,11 @@ app.set("view engine", "ejs");
 
 const db = mysql.createConnection({
  
- host: 'hostingmysql304.webapps.net',
+  host: 'hostingmysql304.webapps.net',
  user: 'liamme',
  password: 'L1Am39??',
  database: 'liam'
+  
  
 });
 
@@ -85,20 +89,39 @@ db.connect((err) =>{
 
 // ******************** End SQL Connection ********************************** //
 
+
+
+// app.get('/alter', function(req, res){
+ //let sql = 'ALTER TABLE users ADD COLUMN admin BOOLEAN DEFAULT FALSE;'
+ // let query = db.query(sql, (err, res) => {
+  //  if(err) throw err;
+//    console.log(res);
+    
+    
+ // });
+ // res.send("altered");
+ // });
+
+
+
+
+
+
+
 // Set up a page that jsut says something 
 app.get("/", function(req, res){
     
    // res.send("This is the best class ever");
     res.render("index");
     console.log("Its true you know!")
-    
+    console.log('Cookies: ', req.cookies);
 });
 
 
 
 // Render products page
 
-app.get('/products', function(req, res){
+app.get('/products',  function(req, res){  // I have this restricted for admin just for proof of concept
  let sql = 'SELECT * FROM products'
   let query = db.query(sql, (err, res1) => {
     if(err) throw err;
@@ -266,7 +289,16 @@ function isLoggedIn(req, res, next) {
 }
 
 
+// see are they admin
+function isAdmin(req, res, next) {
 
+	// if user is authenticated in the session, carry on
+	if (req.user.admin)
+		return next();
+
+	// if they aren't redirect them to the home page
+	res.redirect('/');
+}
 
 
 
@@ -284,20 +316,20 @@ function isLoggedIn(req, res, next) {
         done(null, user.Id); // Very important to ensure the case if the Id from your database table is the same as it is here
     });
 
-    // used to deserialize the user
-    passport.deserializeUser(function(Id, done) {
+    // used to deserialize the 
+    passport.deserializeUser(function(Id, done) {    // LOCAL SIGNUP ============================================================
+
        db.query("SELECT * FROM users WHERE Id = ? ",[Id], function(err, rows){
             done(err, rows[0]);
         });
     });
 
     // =========================================================================
-    // LOCAL SIGNUP ============================================================
     // =========================================================================
     // we are using named strategies since we have one for login and one for signup
     // by default, if there was no name, it would just be called 'local'
 
-    passport.use(
+  passport.use(
         'local-signup',
         new LocalStrategy({
             // by default, local strategy uses username and password, we will override with email
@@ -318,13 +350,14 @@ function isLoggedIn(req, res, next) {
                     // create the user
                     var newUserMysql = {
                         username: username,
+                        email: req.body.email,
                         password: bcrypt.hashSync(password, null, null)  // use the generateHash function in our user model
                     };
 
-                    var insertQuery = "INSERT INTO users ( username, email, password ) values (?,'me@liammccabe.ie',?)";
+                    var insertQuery = "INSERT INTO users ( username, email, password ) values (?,?,?)";
 
-                    db.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
-                        newUserMysql.id = rows.insertId;
+                    db.query(insertQuery,[newUserMysql.username, newUserMysql.email, newUserMysql.password],function(err, rows) {
+                        newUserMysql.Id = rows.insertId;
 
                         return done(null, newUserMysql);
                     });
@@ -374,6 +407,26 @@ function isLoggedIn(req, res, next) {
 
 
 
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CART $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+function findIt(){
+    
+                              let sql2 = 'SELECT Id FROM orders ORDER BY Id DESC LIMIT 1'
+                                let query2 = db.query(sql2, (err, res1, next) => {
+                                if(err) throw err;
+                                //console.log(res1);
+                                //res.render('cart', {res1}); // use the render command so that the response object renders a HHTML page
+                                res1.students = res1[0].Id;
+                                
+                                myObj.name = res1[0].Id + 1; // set the name of the json object to be equal to the cart id + 1
+                            
+                            //return res1();
+      
+                      }); 
+    
+    
+}
 
 
 
@@ -383,6 +436,114 @@ function isLoggedIn(req, res, next) {
 
 
 
+
+/* Add Product to Cart. */
+app.post('/cart/:id', function(req, res, next) {
+  findIt()
+  if(req.session.email){
+         
+                let sql = 'INSERT INTO orderitems (name,price) VALUES ("'+myObj.name+'", "'+req.body.name+'")'
+                console.log("you added " + req.body.name)
+                let query = db.query(sql, (err, res1x) => {
+                if(err) throw err
+                console.log(res1x);
+   
+  
+                                                        });
+ 
+                let sql2 = 'SELECT * FROM orderitems WHERE name = "'+myObj.name+'"'
+                let query2 = db.query(sql2, (err, res1) => {
+                if(err) throw err;
+                console.log(res1);
+                res.render('cart', {res1, greeting: req.session.email}); // use the render command so that the response object renders a HHTML page
+   
+                                                          });
+                                                            
+                                                            
+ 
+  }
+  
+  
+                            
+                            let sql2 = 'SELECT Id FROM orders ORDER BY Id DESC LIMIT 1'
+                                let query2 = db.query(sql2, (err, res1, next) => {
+                                if(err) throw err;
+                                //console.log(res1);
+                                //res.render('cart', {res1}); // use the render command so that the response object renders a HHTML page
+                                res1.students = res1[0].Id;
+                                
+                                myObj.name = res1[0].Id; // set the name of the json object to be equal to the cart id + 1
+                                console.log("The object is" + myObj.name)
+                            console.log("Poiu value from the newCart function and cart Id " + res1[0].Id)
+                            //return res1();
+      
+                      }); 
+                    
+    
+            // myObj is set in the select function above
+                            let sql = 'INSERT INTO orderitems (name,price) VALUES ("'+myObj.name+'", "'+req.body.name+'")'
+                                let query = db.query(sql, (err, res1x, vfr) => {
+                                    if(err) throw err
+                                        //console.log(res1x);
+                                        //     res1x.newSessId =  req.session.email ;
+                       console.log("Insert just happened")
+                                                         });
+ 
+ 
+ 
+ 
+                let sql3 = 'SELECT * FROM orderitems WHERE name = "'+myObj.name+'"'
+                let query3 = db.query(sql3, (err, res1) => {
+                if(err) throw err;
+                console.log(res1);
+                res.render('cart', {res1, greeting: req.session.email}); // use the render command so that the response object renders a HHTML page
+                
+                                                          });
+ 
+ 
+  
+      
+  
+  
+ 
+    
+});
+
+
+app.get('/checkout', function(req, res){  // I have this restricted for admin just for proof of concept
+ 
+ let sql = 'UPDATE orderitems SET name = '+myObj.name+' WHERE name ='+req.sessionID+''
+                                let query = db.query(sql, (err, res1x, vfr) => {
+                                    if(err) throw err
+                                        //console.log(res1x);
+                                        //     res1x.newSessId =  req.session.email ;
+                       
+                                                         });
+                                                         res.send("order Made")
+});
+
+
+//if(req.session.email == "LoggedIn"){}
+
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ CART $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+app.get('/makeorder', function(req, res){  // I have this restricted for admin just for proof of concept
+ 
+ let sql = 'INSERT INTO orders (uName,status) VALUES ("Liam", "Pending")'
+                                let query = db.query(sql, (err, res1x, vfr) => {
+                                    if(err) throw err
+                                        //console.log(res1x);
+                                        //     res1x.newSessId =  req.session.email ;
+                       
+                                                         });
+                                                         res.send("order Made")
+});
+
+
+
+    
+    
+      
 
 
 

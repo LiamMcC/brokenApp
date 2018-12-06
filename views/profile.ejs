@@ -6,23 +6,25 @@
 
 	<div class="item">
 		<h1><span class="fa fa-anchor"></span> Profile Page</h1>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+		
 	</div>
 
 	<div class="row">
 
 		<!-- LOCAL INFORMATION -->
 		<div class="item">
-			<div class="well">
-				<h3><span class="fa fa-user"></span> Local</h3>
 
-					<p class="itemp">
-						<strong>id</strong>: <%= user.Id %><br>
-						<strong>username</strong>: <%= user.username %><br>
-						<strong>password</strong>: <%= user.password %>
+			
+
+					<p >
+						<strong class="itemp">Id: </strong><%= user.Id %><br>
+						<strong class="itemp">username: </strong><%= user.username %><br>
+						<strong class="itemp">username: </strong><%= user.email %><br>
+						<strong class="itemp">password: </strong><%= user.password %>
 					</p>
 
-			</div>
+
+			<a href="/logout" class="button">Logout</a>
 		</div>
 
 	</div>

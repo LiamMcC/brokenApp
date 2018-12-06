@@ -4,15 +4,26 @@
   <h1>Welcome to the products page  <br>
   <div class="grid-container">
          <% res1.forEach(function(product) { %>
-                
+        <form accept-charset="UTF-8" action="/cart/<%= product.Id %>" method="post"> 
+           <div class="item">     
                 <div class="item">
-                    <%= product.Id %><br>
-                    <%= product.Name %><br>
+                   <h1 class="itemtitle">Id: <%= product.Id %></h1>
+                   <p class="itemp"> <%= product.Name %></p>
                     <%= product.Price %><br>
-                    <%= product.Image %>
+                    <image class="pimage" src="/<%= product.Image %>"></image>
                     <a href="/edit/<%= product.Id %>" class="button">Edit Product</a>
+                   
+                   <!-- Hidden values to send the details to app.js -->
+                   
+                   <input id="prodId" name="name" type="hidden" value="<%= product.Name %>">
+                   
+                   
+                    <button class="button">New Add</button>
+                   
+                     
                     </div>
-              
+              </div>
+            </form>
          <% }); %>
     </div>
   </h1>
