@@ -553,7 +553,7 @@ app.get('/makeorder', function(req, res){  // I have this restricted for admin j
 // Now we need to tell the application where to run
 
 
-app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+app.listen(process.env.PORT || 80, process.env.IP || "0.0.0.0", function(){
   console.log("Off we go again");
   
 })
