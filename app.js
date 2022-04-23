@@ -71,7 +71,7 @@ app.set("view engine", "ejs");
 // ******************** SQL Connection ********************************** //
 // https://mysqladmin.webapps.net/phpmyadmin/pma3/index.php?db=liam&server=304&token=fcb8db215553e6e54251aacbeb00df9f
 
-const db = mysql.createConnection({
+var db = mysql.createPool({
  
   host: 'den1.mysql1.gear.host',
  user: 'nci',
@@ -81,16 +81,22 @@ const db = mysql.createConnection({
  
 });
 
-
-db.connect((err) =>{
- if(err){
-  console.log("Connection Refused ... Please check login details");
-   // throw(err)
- }
- else{
-  console.log("Well done you are connected....");
- }
+db.getConnection((err,connection)=> {
+  if(err)
+  throw err;
+  console.log('Database connected successfully');
+  connection.release();
 });
+
+// db.connect((err) =>{
+//  if(err){
+//   console.log("Connection Refused ... Please check login details");
+//    // throw(err)
+//  }
+//  else{
+//   console.log("Well done you are connected....");
+//  }
+// });
 
 // ******************** End SQL Connection ********************************** //
 
