@@ -1,39 +1,35 @@
 <%- include ('../partials/header') -%>
 
-<div class="row">
-  <h1>Welcome to the add products page  <br>
-  <div class="grid-container">
-         <% res1.forEach(function(product) { %>
-                <form accept-charset="UTF-8" action="/edit/<%= product.Id %>" method="post">
-                <div class="item">
-                  <label for="name">Name</label>
-                    <input name="name" type="text" value="<%= product.Name %>" />
-                  
-                  
-                  <label for="name">Price</label>
-                    <input name="price" type="text" value="<%= product.Price %>" />
-                    
-                   
-                   <label for="name">Image URL</label> 
-                    <input name="image" type="text" value="<%= product.Image %>" />
-                    
-                   
-                   <label for="name">Activity</label> 
-                    <input name="activity" type="text" value="<%= product.Activity %>" />
-                    
-                    <button class="w3-button w3-white w3-border">Press Me</button>
-                   
-                    </div>
-              </form>
-         <% }); %>
-         
-         
-    </div>
-  </h1>
+<div class="w3-container w3-light-grey" style="padding:100px 16px" id="contact">
+  <h3 class="w3-center">Need to make a change</h3>
+  <p class="w3-center w3-large">Thats ok just modify below and press save</p>
+  <div style="margin-top:48px">
+   <!-- show any messages that come back with authentication -->
+ 
+    <br>
+    <% res1.forEach(function(product) { %>
+    <form action="/edit/<%= product.id %>" method="post" >
+      <p><input class="w3-input w3-border" type="text" value="<%= product.eventName %>" required name="eventName"></p>
+      <p><input class="w3-input w3-border" type="text" value="<%= product.review %>" required name="review"></p>
+      <p><input class="w3-input w3-border" type="text" value="<%= product.image %>" required name="image"></p>
+      <p>
+        <button class="w3-button w3-black" type="submit">
+          <i class="fa fa-paper-plane"></i> Update
+        </button>
+      </p>
+    </form>
+    <% }); %>
+  </div>
 </div>
 
 
-<label for="sport">Sport:</label>
+
+
+
+
+
+
+
 
 
 

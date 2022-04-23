@@ -1,41 +1,72 @@
 <%- include ('../partials/header') -%>
 
-<div class="row">
-  <h1>Welcome to the products page  <br>
-  <div class="grid-container">
-         <% res1.forEach(function(product) { %>
-        <form accept-charset="UTF-8" action="/cart/<%= product.Id %>" method="post"> 
-           <div class="item">     
-                <div class="item">
-                   <h1 class="itemtitle">Id: <%= product.Id %></h1>
-                   <p class="itemp"> <%= product.Name %></p>
-                    <%= product.Price %><br>
-                    <image class="pimage" src="/<%= product.Image %>"></image>
-                    <a href="/edit/<%= product.Id %>" class="button">Edit Product</a>
-                   
-                   <!-- Hidden values to send the details to app.js -->
-                   
-                   <input id="prodId" name="name" type="hidden" value="<%= product.Name %>">
-                   
-                   
-                    <button class="button">New Add</button>
-                   
-                     
-                    </div>
-              </div>
-            </form>
-         <% }); %>
+<!-- Team Section -->
+<div class="w3-container" style="padding:128px 16px" id="team">
+  <h3 class="w3-center">Sports Event Reviews</h3>
+  <p class="w3-center w3-large">Look at the reviews people left</p>
+  <div class="w3-row-padding w3-grayscale" style="margin-top:64px">
+  
+    <% res1.forEach(function(product) { %>
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <div class="w3-card">
+        <img src="<%= product.image %>" alt="John" style="width:100%">
+        <div class="w3-container">
+          <h3><%= product.eventName %></h3>
+      
+          <p><%= product.review %></p>
+          <p class="w3-opacity">Left By: <%= product.username %></p>
+          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Leave Your Own</button></p>
+        </div>
+      </div>
     </div>
-  </h1>
+    <% }); %>
+   
+
+
+
+
+
+
+
+
+  
+  </div>
 </div>
 
 
-<label for="sport">Sport:</label>
-<input name="sport" type="text" placeholder="Enter a Sport" />
+<div class="w3-container" style="padding:128px 16px" id="team">
+  <h3 class="w3-center">THE TEAM</h3>
+  <p class="w3-center w3-large">The ones who runs this company</p>
+  
+  <div class="w3-row-padding w3-grayscale" style="margin-top:64px">
+ 
+  
 
+ 
 
+  </div>
+</div>
 
 
 
 
 <%- include ('../partials/footer') -%>
+
+
+<div class="w3-col l3 m6 w3-margin-bottom">
+
+  <% res1.forEach(function(product) { %>
+  <div class="w3-card">
+    <img src="<%= product.image %>" alt="John" style="width:100%">
+    <div class="w3-container">
+      
+      <h3><%= product.eventName %></h3>
+      
+      <p><%= product.review %></p>
+      <p class="w3-opacity">Left By: <%= product.username %></p>
+      <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Leave Your Own</button></p>
+    </div>
+  </div>
+  <% }); %>
+
+</div>

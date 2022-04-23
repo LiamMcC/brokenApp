@@ -132,8 +132,8 @@ app.get("/", function(req, res){
 
 // Render products page
 
-app.get('/products',  function(req, res){  // I have this restricted for admin just for proof of concept
- let sql = 'SELECT * FROM products'
+app.get('/reviews',  function(req, res){  // I have this restricted for admin just for proof of concept
+ let sql = 'SELECT * FROM reviews'
   let query = db.query(sql, (err, res1) => {
     if(err) throw err;
     console.log(res1);
@@ -173,7 +173,9 @@ else {
 
     
   }
-  res.render('add');
+  res.render('add', {
+    user : req.user // get the user out of session and pass to template
+  });
   console.log("Now you are on the products page!");
 });
 
@@ -192,21 +194,22 @@ app.get('/upgrade/:id', function(req, res){
 // ***** Post new product to database
 
 app.post('/add', function(req, res){
-  let sql = 'INSERT INTO products (Name, Price, Image, Activity) VALUES ("'+req.body.name+'", '+req.body.price+', "'+req.body.image+'", "'+req.body.activity+'")'
+  var who = req.user.username
+  let sql = 'INSERT INTO reviews (username, review, eventName, image) VALUES ("'+who+'", "'+req.body.review+'", "'+req.body.eventName+'", "'+req.body.image+'")'
   let query = db.query(sql, (err, res) => {
     if(err) throw err;
     console.log(res);
     
     
   });
-  res.redirect("/products");
+  res.redirect("/reviews");
   });
 
 
 // Edit product
 
 app.get('/edit/:id', function(req, res){
-    let sql = 'SELECT * FROM Products WHERE Id = "'+req.params.id+'" ; ';
+    let sql = 'SELECT * FROM reviews WHERE Id = "'+req.params.id+'" ; ';
   let query = db.query(sql, (err, res1) => {
     if(err) throw err;
     console.log(res);
@@ -225,14 +228,14 @@ app.get('/edit/:id', function(req, res){
 // ***** Post new product to database
 
 app.post('/edit/:id', function(req, res){
-  let sql = 'UPDATE products SET Name = "'+req.body.name+'", Price = "'+req.body.price+'", Activity = "'+req.body.activity+'", Image = "'+req.body.image+'" WHERE Id = "'+req.params.id+'";'
+  let sql = 'UPDATE reviews SET eventName = "'+req.body.eventName+'", review = "'+req.body.review+'", image = "'+req.body.image+'" WHERE id = "'+req.params.id+'";'
   let query = db.query(sql, (err, res) => {
     if(err) throw err;
     console.log(res);
     
     
   });
-  res.redirect("/products");
+  res.redirect("/reviews");
   });
 
 
@@ -307,6 +310,28 @@ app.get('/delete/:id',  function(req, res){
 			user : req.user // get the user out of session and pass to template
 		});
 	});
+
+	app.get('/editprofile', isLoggedIn, function(req, res) {
+		res.render('editprofile', {
+			user : req.user // get the user out of session and pass to template
+		});
+	});
+
+
+  app.post('/editprofile', function(req, res){
+    var passwordN = bcrypt.hashSync(req.body.password, null, null)
+    let sql = 'UPDATE users SET username = "'+req.body.username+'", password = "'+passwordN+'", email = "'+req.body.email+'" WHERE id = "'+req.user.id+'";'
+    let query = db.query(sql, (err, res) => {
+      if(err) throw err;
+      console.log(res);
+      
+      
+    });
+    res.redirect("/products");
+    });
+
+
+  //bcrypt.hashSync(password, null, null)
 
 	// =====================================
 	// LOGOUT ==============================
