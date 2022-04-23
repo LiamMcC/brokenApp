@@ -8,11 +8,16 @@
    <!-- show any messages that come back with authentication -->
   
     <br>
-    <form accept-charset="UTF-8" action="/add" method="post" >
+    <form accept-charset="UTF-8" action="/add" ref="uploadForm" method="post" enctype="multipart/form-data" >
       
       <p><input class="w3-input w3-border" type="text" placeholder="<%= user.username %>"  name="username"></p>
       <p><input class="w3-input w3-border" type="text" placeholder="Review" required name="review"></p>
       <p><input class="w3-input w3-border" type="text" placeholder="Event Name" required name="eventName"></p>
+      
+        <input type="file" name="sampleFile" />
+        
+      
+      
       <p><input class="w3-input w3-border" type="text" placeholder="Image" required name="image"></p>
       <p>
         <button class="w3-button w3-black" type="submit">

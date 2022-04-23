@@ -5,7 +5,8 @@ var flash    = require('connect-flash');
 // Passport
 var passport = require('passport');
 
-
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
 //var myObj = { "name":"John"};    // set a json object to represent the cart I called it myObject
 
 
@@ -194,8 +195,26 @@ app.get('/upgrade/:id', function(req, res){
 // ***** Post new product to database
 
 app.post('/add', function(req, res){
+
+  let sampleFile = req.files.sampleFile
+  filename = sampleFile.name;
+ // we use the middleware (file upload ) to move the data from the form to the desired location
+    sampleFile.mv('./images/' + filename, function(err){
+        if(err)
+      
+        return res.status(500).send(err);
+        
+        console.log("Image is " + req.files.sampleFile)
+        
+        //res.redirect('/');
+        
+    });
+
+
+
+
   var who = req.user.username
-  let sql = 'INSERT INTO reviews (username, review, eventName, image) VALUES ("'+who+'", "'+req.body.review+'", "'+req.body.eventName+'", "'+req.body.image+'")'
+  let sql = 'INSERT INTO reviews (username, review, eventName, image) VALUES ("'+who+'", "'+req.body.review+'", "'+req.body.eventName+'", "'+filename+'")'
   let query = db.query(sql, (err, res) => {
     if(err) throw err;
     console.log(res);
