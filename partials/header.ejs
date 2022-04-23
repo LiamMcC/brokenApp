@@ -13,11 +13,18 @@
       <div class="topnav"><a href="/">Home</a>
       <a href="/products">Products</a>
       <a href="/add">Add Product</a>
-      <a href="/cart">Cart</a>
-      <a href="/login">Log-In</a>
+      
+        <% if (isAuthenticated) { %>
+          <a href="/logout">Log-Out</a>
+          <a href="/profile">Profile</a>
+          <%} else { %>
+            <a href="/login">Log-In</a>
+          <% } %>
+        
+       
       <a href="/signup">Register</a>
-      <a href="/profile">Profile</a>
-      <a href="/logout">Log-Out</a>
+     
+      
       </div>
     </div>
   </div>

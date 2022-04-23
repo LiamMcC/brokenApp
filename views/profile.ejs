@@ -1,5 +1,5 @@
 
-  <% include ../partials/header %>
+ <%- include ('../partials/header') -%>
   
   <div class="row">
 <div class="container">
@@ -17,7 +17,7 @@
 			
 
 					<p >
-						<strong class="itemp">Id: </strong><%= user.Id %><br>
+						<strong class="itemp">Id: </strong><%= user.id %><br>
 						<strong class="itemp">username: </strong><%= user.username %><br>
 						<strong class="itemp">username: </strong><%= user.email %><br>
 						<strong class="itemp">password: </strong><%= user.password %>
@@ -31,6 +31,7 @@
 
 </div>
   </div>
+<% console.log("Hi") %>
 
-
-<% include ../partials/footer %>
+  <%- include ('../partials/footer') -%>
+  

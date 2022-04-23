@@ -1,0 +1,41 @@
+<%- include ('../partials/header') -%>
+
+<div class="row">
+  <h1>Welcome to the Users Page <br> This is for admin only</h1>
+  <div class="grid-container">
+         <% res1.forEach(function(user) { %>
+        <form accept-charset="UTF-8" action="/cart/<%= user.Id %>" method="post"> 
+           <div class="item">     
+                <div class="item">
+                   <h1 class="itemtitle">User Id: <%= user.Id %></h1>
+                   <p class="itemp"> <%= user.username %></p>
+                    <%= user.Price %><br>
+                    
+                    <a href="/upgrade/<%= user.id %>" class="button">Make Admin</a>
+                   
+                 
+                   
+                   
+                   
+                   
+                    
+                   
+                     
+                    </div>
+              </div>
+            </form>
+         <% }); %>
+    </div>
+  </h1>
+</div>
+
+
+<label for="sport">Sport:</label>
+<input name="sport" type="text" placeholder="Enter a Sport" />
+
+
+
+
+
+
+<%- include ('../partials/footer') -%>

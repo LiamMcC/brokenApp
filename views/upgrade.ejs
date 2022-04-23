@@ -1,0 +1,37 @@
+<%- include ('../partials/header') -%>
+
+<div class="row">
+  <h1>Welcome to the add products page  <br>
+  <div class="grid-container">
+         <% res1.forEach(function(product) { %>
+                <form accept-charset="UTF-8" action="/edit/<%= user.id %>" method="post">
+                <div class="item">
+                  <label for="name">Username</label>
+                    <input name="status" type="text" value="<%= product.username %>" />
+                 
+                    
+                   
+                   <label for="name">Activity</label> 
+                    <input name="activity" type="text" value="<%= product.Activity %>" />
+                    
+                    <button class="w3-button w3-white w3-border">Press Me</button>
+                   
+                    </div>
+              </form>
+         <% }); %>
+         
+         
+    </div>
+  </h1>
+</div>
+
+
+<label for="sport">Sport:</label>
+
+
+
+
+
+
+
+<%- include ('../partials/footer') -%>
