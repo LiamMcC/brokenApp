@@ -10,6 +10,14 @@ app.use(fileUpload());
 //var myObj = { "name":"John"};    // set a json object to represent the cart I called it myObject
 
 
+const httpStatusCodes = {
+  OK: 200,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER: 500
+ }
+
+
 var LocalStrategy = require('passport-local').Strategy;
 var localStorage = require('node-localstorage')
 var session  = require('express-session');
@@ -133,13 +141,11 @@ app.get("/", function(req, res){
 
 // Render products page
 
-app.get('/reviews',  function(req, res){  // I have this restricted for admin just for proof of concept
+app.get('/reviews',  function(req, res, next){  // I have this restricted for admin just for proof of concept
  let sql = 'SELECT * FROM reviews'
   let query = db.query(sql, (err, res1) => {
-    if(err) throw err;
-    console.log(res1);
-
     res.render('products', {res1});
+    next(err) ;
   });
  
   console.log("Now you are on the products page!");
@@ -341,8 +347,8 @@ app.get('/delete/:id',  function(req, res){
     var passwordN = bcrypt.hashSync(req.body.password, null, null)
     let sql = 'UPDATE users SET username = "'+req.body.username+'", password = "'+passwordN+'", email = "'+req.body.email+'" WHERE id = "'+req.user.id+'";'
     let query = db.query(sql, (err, res) => {
-      if(err) throw err;
-      console.log(res);
+      if(err) res.render('error');;
+      
       
       
     });
@@ -435,12 +441,13 @@ function isAdmin(req, res, next) {
                     var newUserMysql = {
                         username: username,
                         email: req.body.email,
+                        phone: req.body.phone,
                         password: bcrypt.hashSync(password, null, null)  // use the generateHash function in our user model
                     };
+console.log("Phone" + req.body.phone)
+                    var insertQuery = "INSERT INTO users ( username, email, password, ulevel, phone ) values (?,?,?, 'normal', ?)";
 
-                    var insertQuery = "INSERT INTO users ( username, email, password, ulevel ) values (?,?,?, 'normal')";
-
-                    db.query(insertQuery,[newUserMysql.username, newUserMysql.email, newUserMysql.password],function(err, rows) {
+                    db.query(insertQuery,[newUserMysql.username, newUserMysql.email, newUserMysql.password, newUserMysql.phone],function(err, rows) {
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);
@@ -487,14 +494,29 @@ function isAdmin(req, res, next) {
 
 
 
+    //catch all endpoint will be Error Page
+// app.get("*", function(req,res){
+//   res.render('oops');
+// });
     
-    
-      
+//       // custom error handling if it is 404 render 404 page
+// app.use((req, res, next) => {
+//   const err = new Error(res.render('oops'))
+//   err.status = 404
+//   //res.render('oops');
+//   next(err) 
+// });
 
 
+// // error handler if anything else but 404
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500)
+//   res.render('error');
+// });
 
-
-
+// ****** call next from each route to be handled if there is an error
+// ****** next(err) ;
+// ****** pass next in as a parameter to the route
 
 // Now we need to tell the application where to run
 
